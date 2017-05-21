@@ -50,17 +50,6 @@ def QueryCompras(query):
 		compra = []
 	return jsonify(results=lista)
 
-def GetCompras():
-    return QueryCompras(None)
-
-@app.route('/compras/comprador/<comprador>')
-def GetComprasParaComprador(comprador):
-    return QueryCompras({"comprador": comprador})
-	
-@app.route('/compras/nombre/<nombre>')
-def GetComprasParaNombre(nombre):
-    return QueryCompras({"nombre": nombre})
-
 @app.route("/compras/consultar")
 def consultarCompras():
     return render_template("consultarCompras.html")	
@@ -78,7 +67,6 @@ def compraIncluida():
 	db.compras.insert_one(post).inserted_id
 	return "Añadida la compra: {} por {}€ de {}".format(nombre, precio, comprador)
  	
-	
 port = os.getenv('PORT', '5000')
 if __name__ == "__main__":
 	#app.run(host='0.0.0.0', port=int(port))
