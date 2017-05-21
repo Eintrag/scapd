@@ -14,6 +14,15 @@
 
 import os
 from flask import Flask, jsonify
+import pymongo
+from pymongo import MongoClient
+
+connection = pymongo.MongoClient('ds147821.mlab.com', 47821)
+db = connection['scapd']
+db.authenticate('admin', '8hMzYgP5b2tDQoesP0Ge')
+
+#post = {"nombre": "Tomates", "precio": "2.4", "comprador": "Sergio"}
+#db.compras.insert_one(post).inserted_id
 
 app = Flask(__name__)
 
@@ -21,25 +30,30 @@ app = Flask(__name__)
 def Welcome():
     return app.send_static_file('index.html')
 
-@app.route('/myapp')
-def WelcomeToMyapp():
-    return 'Welcome again to my app running on Bluemix!'
+def QueryCompras(query):
+	lista = []
+	compra = []
+	for entrada in db.compras.find(query):
+		compra.append(entrada['nombre'])
+		compra.append(entrada['precio'])
+		compra.append(entrada['comprador'])
+		lista.append(compra)
+		compra = []
+	return jsonify(results=lista)
 
-@app.route('/api/people')
-def GetPeople():
-    list = [
-        {'name': 'John', 'age': 28},
-        {'name': 'Bill', 'val': 26}
-    ]
-    return jsonify(results=list)
+@app.route('/compras')
+def GetCompras():
+    return QueryCompras("")
 
-@app.route('/api/people/<name>')
-def SayHello(name):
-    message = {
-        'message': 'Hello ' + name
-    }
-    return jsonify(results=message)
+@app.route('/compras/comprador/<comprador>')
+def GetComprasParaComprador(comprador):
+    return QueryCompras({"comprador": comprador})
+	
+@app.route('/compras/nombre/<nombre>')
+def GetComprasParaNombre(nombre):
+    return QueryCompras({"nombre": nombre})
 
 port = os.getenv('PORT', '5000')
 if __name__ == "__main__":
 	app.run(host='0.0.0.0', port=int(port))
+	#app.run(host='127.0.0.1', port=int(port))
