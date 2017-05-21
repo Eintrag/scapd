@@ -19,15 +19,15 @@ from flask import Flask, jsonify, url_for, render_template, request
 import pymongo
 from pymongo import MongoClient
 
+app = Flask(__name__)
+
 connection = pymongo.MongoClient('ds147821.mlab.com', 47821)
 db = connection['scapd']
 db.authenticate('admin', '8hMzYgP5b2tDQoesP0Ge')
 
-app = Flask(__name__)
-app.config['DEBUG'] = True
 linkIndice = '<a href="/index">Volver al indice</a>'
 
-@app.route('/index')
+@app.route('/')
 def Welcome():
     return app.send_static_file('index.html')
 
