@@ -23,11 +23,12 @@ app = Flask(__name__)
 
 connection = pymongo.MongoClient('ds147821.mlab.com', 47821)
 db = connection['scapd']
-db.authenticate('admin', '8hMzYgP5b2tDQoesP0Ge')
+db.authenticate('admin', open('password.txt', 'r').read())
 
 linkIndice = '<a href="/index">Volver al indice</a>'
 
 @app.route('/')
+@app.route('/index')
 def Welcome():
     return app.send_static_file('index.html')
 
