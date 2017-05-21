@@ -1,0 +1,9 @@
+applications:
+- path: .
+  memory: 128M
+  instances: 1
+  domain: mybluemix.net
+  name: sfr-scapd
+  host: sfr-scapd
+  disk_quota: 1024M
+  buildpack: python_buildpack
