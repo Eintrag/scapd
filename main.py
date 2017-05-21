@@ -15,11 +15,9 @@
 # limitations under the License.
 
 import os
-from flask import Flask, jsonify, url_for, render_template
-from flask import request
+from flask import Flask, jsonify, url_for, render_template, request
 import pymongo
 from pymongo import MongoClient
-import json
 
 connection = pymongo.MongoClient('ds147821.mlab.com', 47821)
 db = connection['scapd']
