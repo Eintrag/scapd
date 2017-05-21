@@ -65,7 +65,7 @@ def compraIncluida():
 	comprador = request.form['comprador']
 	post = {"nombre": nombre, "precio": precio, "comprador": comprador}
 	db.compras.insert_one(post).inserted_id
-	return "Añadida la compra: {} por {}€ de {}".format(nombre, precio, comprador)
+	return 'Añadida la compra: {} por {}€ de {} <br><br> <a href="/index">Volver al indice</a>'.format(nombre, precio, comprador)
  	
 port = os.getenv('PORT', '5000')
 if __name__ == "__main__":
