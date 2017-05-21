@@ -19,6 +19,7 @@ from flask import Flask, jsonify, url_for, render_template
 from flask import request
 import pymongo
 from pymongo import MongoClient
+import json
 
 connection = pymongo.MongoClient('ds147821.mlab.com', 47821)
 db = connection['scapd']
@@ -26,6 +27,7 @@ db.authenticate('admin', '8hMzYgP5b2tDQoesP0Ge')
 
 app = Flask(__name__)
 app.config['DEBUG'] = True
+linkIndice = '<a href="/index">Volver al indice</a>'
 
 @app.route('/index')
 def Welcome():
@@ -43,8 +45,12 @@ def formarQuery():
 		query["precio"] = precio
 	if(comprador != ""):
 		query["comprador"] = comprador
-	print query
-	return QueryCompras(query)
+	resultado = QueryCompras(query)
+	listado = ""
+	for i in range(1, len(resultado)):
+		listado = listado + "{}: <b>Nombre:</b> {} <b>Precio:</b> {}€ <b>Comprador:</b> {}<br><br>".format(i, resultado[i][0], resultado[i][1], resultado[i][2])
+	listado = listado + linkIndice
+	return listado
 	
 def QueryCompras(query):
 	lista = []
@@ -55,7 +61,7 @@ def QueryCompras(query):
 		compra.append(entrada['comprador'])
 		lista.append(compra)
 		compra = []
-	return jsonify(results=lista)
+	return lista
 
 @app.route("/compras/consultar")
 def consultarCompras():
@@ -72,9 +78,8 @@ def compraIncluida():
 	comprador = request.form['comprador']
 	post = {"nombre": nombre, "precio": precio, "comprador": comprador}
 	db.compras.insert_one(post).inserted_id
-	return 'Añadida la compra: {} por {}€ de {} <br><br> <a href="/index">Volver al indice</a>'.format(nombre, precio, comprador)
+	return 'Añadida la compra: {} por {}€ de {} <br><br> {}'.format(nombre, precio, comprador, linkIndice)
  	
 port = os.getenv('PORT', '5000')
 if __name__ == "__main__":
-	#app.run(host='0.0.0.0', port=int(port))
-	app.run(host='127.0.0.1', port=int(port))
+	app.run(host='0.0.0.0', port=int(port))
