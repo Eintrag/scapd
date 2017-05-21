@@ -31,12 +31,19 @@ app.config['DEBUG'] = True
 def Welcome():
     return app.send_static_file('index.html')
 
-@app.route('/compras/consultadas')
+@app.route('/compras/consultadas', methods=['POST'])
 def formarQuery():
+	query = {}
 	nombre = request.form['nombre']
 	precio = request.form['precio']
 	comprador = request.form['comprador']
-	query = {"nombre": nombre, "precio": precio, "comprador": comprador}
+	if(nombre != ""):
+		query["nombre"] = nombre
+	if(precio != ""):
+		query["precio"] = precio
+	if(comprador != ""):
+		query["comprador"] = comprador
+	print query
 	return QueryCompras(query)
 	
 def QueryCompras(query):
